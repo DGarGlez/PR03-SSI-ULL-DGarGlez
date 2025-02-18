@@ -3,15 +3,30 @@
 #include <iomanip>
 #include <array>
 
-// Constantes del ChaCha20
+/**
+ * @brief Constantes del ChaCha20
+ */
 const uint32_t CONSTANTS[] = {0x61707865, 0x3320646e, 0x79622d32, 0x6b206574};
 
-// Rota un entero de 32 bits
+/**
+ * @brief Rota un entero de 32 bits
+ * 
+ * @param value El valor a rotar
+ * @param shift La cantidad de bits a rotar
+ * @return uint32_t El valor rotado
+ */
 inline uint32_t rotl(uint32_t value, int shift) {
     return (value << shift) | (value >> (32 - shift));
 }
 
-// Operación básica del ChaCha20 (QR: Quarter Round)
+/**
+ * @brief Operación básica del ChaCha20 (QR: Quarter Round)
+ * 
+ * @param a Referencia al primer entero de 32 bits
+ * @param b Referencia al segundo entero de 32 bits
+ * @param c Referencia al tercer entero de 32 bits
+ * @param d Referencia al cuarto entero de 32 bits
+ */
 void quarterRound(uint32_t& a, uint32_t& b, uint32_t& c, uint32_t& d) {
     a += b; d ^= a; d = rotl(d, 16);
     c += d; b ^= c; b = rotl(b, 12);
@@ -19,7 +34,11 @@ void quarterRound(uint32_t& a, uint32_t& b, uint32_t& c, uint32_t& d) {
     c += d; b ^= c; b = rotl(b, 7);
 }
 
-// Realiza las 20 rondas del algoritmo
+/**
+ * @brief Realiza las 20 rondas del algoritmo ChaCha20
+ * 
+ * @param state El estado inicial del algoritmo
+ */
 void chacha20Block(std::array<uint32_t, 16>& state) {
     std::array<uint32_t, 16> workingState = state;
 
@@ -42,7 +61,11 @@ void chacha20Block(std::array<uint32_t, 16>& state) {
     }
 }
 
-// Imprime el estado en hexadecimal
+/**
+ * @brief Imprime el estado en hexadecimal
+ * 
+ * @param state El estado a imprimir
+ */
 void printState(const std::array<uint32_t, 16>& state) {
     for (int i = 0; i < 16; ++i) {
         std::cout << std::hex << std::setfill('0') << std::setw(8) << state[i] << " ";
@@ -50,12 +73,21 @@ void printState(const std::array<uint32_t, 16>& state) {
     }
 }
 
-//Funcion que convierte palabras de 32 bits en little endian
+/**
+ * @brief Convierte palabras de 32 bits en little endian
+ * 
+ * @param word La palabra a convertir
+ * @return uint32_t La palabra convertida
+ */
 uint32_t littleEndian(uint32_t word){
     return ((word & 0x000000ff) << 24) | ((word & 0x0000ff00) << 8) | ((word & 0x00ff0000) >> 8) | ((word & 0xff000000) >> 24);
 }
+
 /*
-// Funcion que genera una clave, nonce y contador aleatorios y los retorna como un std::array<uint32_t, 16> state
+ * @brief Genera una clave, nonce y contador aleatorios
+ * 
+ * @return std::array<uint32_t, 16> El estado generado aleatoriamente
+ */
 std::array<uint32_t, 16> randomState(){
     std::array<uint32_t, 16> state;
     for (int i = 0; i < 4; ++i) {
@@ -68,7 +100,8 @@ std::array<uint32_t, 16> randomState(){
     }
     return state;
 }
-*/
+
+
 int main() {
     
     std::array<uint32_t, 16> state = {
